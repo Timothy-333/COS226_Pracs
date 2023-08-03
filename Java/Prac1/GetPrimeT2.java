@@ -1,27 +1,24 @@
-public class MyThread extends Thread
+public class GetPrimeT2 extends Thread
 {
     private Integer[] array;
-    private int startRange;
-    private int endRange;
-
-    public MyThread(Integer[] array, int n, int m)
+    public SharedCounter counter;
+    public GetPrimeT2(Integer[] array)
     {
         this.array = array;
-        this.startRange = n;
-        this.endRange = m;
+        this.counter = new SharedCounter();
     }
-
     public void run() 
     {
-        for (int i = startRange; i <= endRange; i++)
+        int count = counter.getAndIncrement();
+        while (count < array.length)
         {
-            if (isPrime(array[i]))
+            if (isPrime(array[count]))
             {
-                System.out.println(Thread.currentThread().getName() + " [" + startRange + "-" + endRange + "]: " + array[i]);
+                System.out.println(Thread.currentThread().getName() + " [" + count + "]: " + array[count]);
             }
+            count = counter.getAndIncrement();
         }
     }
-
     private boolean isPrime(int num) 
     {
         if (num <= 1) 
