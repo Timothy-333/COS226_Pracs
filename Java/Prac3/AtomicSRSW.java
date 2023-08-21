@@ -2,9 +2,9 @@ public class AtomicSRSW<T> implements Register<T>
 {
 
     // code (other member variables if any)
-    static long lastStamp = 0;
-    StampedValue<T> lastRead; // regular SRSW timestamp-value pair
-    StampedValue<T> value;
+    volatile long lastStamp = 0;
+    volatile StampedValue<T> lastRead; // regular SRSW timestamp-value pair
+    volatile StampedValue<T> value;
 
     public AtomicSRSW(T init) 
     {
@@ -15,7 +15,6 @@ public class AtomicSRSW<T> implements Register<T>
     public T read() 
     {
         StampedValue<T> result = value.max(lastRead, value);
-        // System.out.println(lastRead.stamp + ":" + lastRead.value + " " + value.stamp + ":" + value.value + " " + result.stamp + ":" + result.value);
         lastRead = result;
         System.out.println("(reader) " + Thread.currentThread().getName() + " : " + result.value);
         return result.value;

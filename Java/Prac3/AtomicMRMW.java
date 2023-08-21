@@ -1,6 +1,6 @@
 public class AtomicMRMW<T> implements Register<T>{
 
-    private StampedValue<AtomicMRSW<T>>[] a_table; // array of atomic MRSW registers
+    private volatile StampedValue<AtomicMRSW<T>>[] a_table; // array of atomic MRSW registers
 
     @SuppressWarnings("unchecked")
     public AtomicMRMW(int capacity, T init) 
@@ -24,7 +24,7 @@ public class AtomicMRMW<T> implements Register<T>{
         a_table[me].value.write(value);
     }
 
-    public T read() 
+    public T read()
     {
         StampedValue<AtomicMRSW<T>> max = new StampedValue<AtomicMRSW<T>>(-1, null);
         for (int i = 0; i < a_table.length; i++) 

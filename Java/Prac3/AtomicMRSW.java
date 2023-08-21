@@ -2,7 +2,7 @@ public class AtomicMRSW<T> implements Register<T>
 {
 
     // code (other member variables if any)
-    long lastStamp = 0;
+    volatile long lastStamp = 0;
     private volatile StampedValue<AtomicSRSW<T>>[][] a_table; // each entry is SRSW atomic
 
     @SuppressWarnings("unchecked")

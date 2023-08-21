@@ -13,17 +13,13 @@ public class MyThreads extends Thread {
 		int random = (int) (Math.random() * 100);
 		try 
 		{
-			synchronized (this) 
-			{
-				// Wait for 100 milliseconds
-				this.wait(Math.round(Math.random() * 100));
-				if(writer)
-					register.write(random);
-				else
-					register.read();
-			}
+			Thread.sleep(random);
+			if(writer)
+				register.write(random);
+			else
+				register.read();
 		} 
-		catch (InterruptedException e) 
+		catch (Exception e) 
 		{
 			e.printStackTrace();
 		}
