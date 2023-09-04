@@ -1,3 +1,4 @@
+package Task2;
 public class Node extends Thread {
 
     private Printer p;
