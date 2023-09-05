@@ -1,21 +1,24 @@
 package Task1;
 public class Node extends Thread 
 {
-	boolean locked = false;
+	volatile boolean locked = false;
 	Node next = null;
+	public int request;
+	public String name;
     private Printer p;
 
 	Node(Printer _p)
 	{
 		this.p = _p ;
+		request = 0;
 	}
 
 	@Override
 	public void run()
 	{
-		for (int i = 0; i < 5; i++) 
+		for (request = 0; request < 5; request++)
 		{
-			p.Print(i);
+			p.Print(request);
 		}
 	}
 }

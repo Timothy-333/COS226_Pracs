@@ -21,15 +21,17 @@ public class MCSQueue implements Lock
         };
         this.p = p;
     }
-    public void lock()
+    public void lock(int request)
     {
         Node node = myNode.get();
+        node.name = Thread.currentThread().getName();
         Node pred = tail.getAndSet(node);
+        node.request = request;
         if(pred != null)
         {
             node.locked = true;
             pred.next = node;
-            while(node.locked);
+            while(node.locked){};
         }
     }
     public void unlock()
@@ -41,8 +43,21 @@ public class MCSQueue implements Lock
                 return;
             while(node.next == null);
         }
+        //print queue
+        Node temp = node.next;
         node.next.locked = false;
+        System.out.print("Queue: ");
+        while(temp.next != null)
+        {
+            System.out.print(temp.name + ":Request " + temp.request + " -> ");
+            temp = temp.next;
+        }
+        System.out.println(temp.name + ":Request " + temp.request);
         node.next = null;
+    }
+    public void lock()
+    {
+        throw new UnsupportedOperationException();
     }
     public void lockInterruptibly() throws InterruptedException
     {
