@@ -1,13 +1,15 @@
 import java.util.Queue;
 import java.util.concurrent.locks.Lock;
 
-public class CreateThread implements Runnable {
-    private final Queue<Info> createQueue;
-    private final Queue<Info> database;
-    private final Lock createLock;
-    private final Lock databaseLock;
+public class CreateThread implements Runnable 
+{
+    private volatile Queue<Info> createQueue;
+    private volatile Queue<Info> database;
+    private volatile Lock createLock;
+    private volatile Lock databaseLock;
 
-    public CreateThread(Queue<Info> createQueue, Queue<Info> database, Lock createLock, Lock databaseLock) {
+    public CreateThread(Queue<Info> createQueue, Queue<Info> database, Lock createLock, Lock databaseLock) 
+    {
         this.createQueue = createQueue;
         this.database = database;
         this.createLock = createLock;
@@ -15,28 +17,32 @@ public class CreateThread implements Runnable {
     }
 
     @Override
-    public void run() {
+    public void run() 
+    {
         while (!createQueue.isEmpty()) 
         {
-            synchronized (createLock)
+            createLock.lock();
+            if (!createQueue.isEmpty()) 
             {
-                if (!createQueue.isEmpty()) 
-                {
-                    Info newRecord = createQueue.poll();
-                    // Simulate database creation logic
-                    synchronized (databaseLock) 
-                    {
-                        database.add(newRecord);
-                    }
-                    System.out.println(Thread.currentThread().getName() + " CREATE success: " + newRecord.id + ", " + newRecord.name);
-                }
+                Info newRecord = createQueue.poll();
+                // Simulate database creation logic
+                databaseLock.lock();
+                System.out.println(Thread.currentThread().getName() + " CREATE is waiting for request");
+                database.add(newRecord);
+                System.out.println(Thread.currentThread().getName() + " CREATE success " + newRecord.id + ", " + newRecord.name);
+                System.out.println(Thread.currentThread().getName() + " CREATE is sleeping");
+                databaseLock.unlock();             
             }
+            createLock.unlock();
             
             // Simulate sleeping
-            try {
+            try 
+            {
                 int sleepTime = (int) (Math.random() * 51) + 50;
                 Thread.sleep(sleepTime);
-            } catch (InterruptedException e) {
+            } 
+            catch (InterruptedException e) 
+            {
                 e.printStackTrace();
             }
         }

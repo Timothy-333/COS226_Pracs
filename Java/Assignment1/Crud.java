@@ -13,11 +13,11 @@ public class Crud {
     private int numThreads = 5;
     private Thread[] threads = new Thread[numThreads * 4];
     
-    private volatile Lock createLock = new Bakery(numThreads);
-    private volatile Lock readLock = new Bakery(numThreads);
-    private volatile Lock updateLock = new Bakery(numThreads);
-    private volatile Lock deleteLock = new Bakery(numThreads);
-    private volatile Lock databaseLock = new Bakery(4);
+    private volatile Lock createLock = new Bakery(numThreads * 4);
+    private volatile Lock readLock = new Bakery(numThreads* 4);
+    private volatile Lock updateLock = new Bakery(numThreads* 4);
+    private volatile Lock deleteLock = new Bakery(numThreads* 4);
+    private volatile Lock databaseLock = new Bakery(numThreads * 4);
     
     public Crud()
     {
@@ -44,18 +44,22 @@ public class Crud {
                 if(i == 0)
                 {
                     threads[j] = new Thread(new CreateThread(create, database, createLock, databaseLock));
+                    threads[j].setName("Thread-" + j);
                 }
                 else if(i == 1)
                 {
                     threads[j + numThreads * i] = new Thread(new ReadThread(read, database, readLock, databaseLock));
+                    threads[j + numThreads * i].setName("Thread-" + (j + numThreads * i));
                 }
                 else if(i == 2)
                 {
                     threads[j + numThreads * i] = new Thread(new UpdateThread(update, database, updateLock, databaseLock));
+                    threads[j + numThreads * i].setName("Thread-" + (j + numThreads * i));
                 }
                 else if(i == 3)
                 {
                     threads[j + numThreads * i] = new Thread(new DeleteThread(delete, database, deleteLock, databaseLock));
+                    threads[j + numThreads * i].setName("Thread-" + (j + numThreads * i));
                 }
             }
         }
@@ -66,16 +70,5 @@ public class Crud {
         {
             threads[i].start();
         }
-        // for(int i = 0; i < numThreads * 4; i++)
-        // {
-        //     try 
-        //     {
-        //         threads[i].join();
-        //     } 
-        //     catch (InterruptedException e) 
-        //     {
-        //         e.printStackTrace();
-        //     }
-        // }
     }
 }

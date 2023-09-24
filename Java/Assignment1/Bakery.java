@@ -26,7 +26,6 @@ public class Bakery implements Lock
 		int i = Integer.parseInt(Thread.currentThread().getName().split("-")[1]);
 		flag[i] = true;
 		label[i] = max() + 1;
-		System.out.println(Thread.currentThread().getName() + ": flag[" + i + "] = " + flag[i] + ", label[" + i + "] = " + label[i]);
 		while(thereExists(i))
 		{
 			//wait
