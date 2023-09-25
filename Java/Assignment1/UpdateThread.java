@@ -24,6 +24,7 @@ public class UpdateThread implements Runnable
             if (!updateQueue.isEmpty()) 
             {
                 Info updateRecord = updateQueue.poll();
+                updateLock.unlock();
                 boolean found = false;
                 // Simulate database update logic
                 databaseLock.lock();
@@ -40,7 +41,7 @@ public class UpdateThread implements Runnable
                 }
                 if(!found)
                 {
-                    System.out.println(Thread.currentThread().getName() + " UPDATE failed " + updateRecord.id + ", " + updateRecord.name + " attempts:" + updateRecord.attempt);
+                    System.out.println(Thread.currentThread().getName() + " UPDATE failed " + updateRecord.id + ", " + updateRecord.name + ", attempts:" + updateRecord.attempt);
                     if(updateRecord.attempt < 3)
                     {
                         updateRecord.attempt++;
@@ -52,7 +53,6 @@ public class UpdateThread implements Runnable
                 System.out.println(Thread.currentThread().getName() + " UPDATE is sleeping");
                 databaseLock.unlock();
             }
-            updateLock.unlock();
             
             // Simulate sleeping
             try 

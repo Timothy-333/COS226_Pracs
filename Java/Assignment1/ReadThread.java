@@ -24,6 +24,7 @@ public class ReadThread implements Runnable
             if (!readQueue.isEmpty()) 
             {
                 boolean readRecord = readQueue.poll();
+                readLock.unlock();
                 // Simulate database reading logic
                 if(readRecord)
                 {
@@ -42,7 +43,6 @@ public class ReadThread implements Runnable
                     System.out.println(Thread.currentThread().getName() + " READ failed");
                 }
             }
-            readLock.unlock();
             
             // Simulate sleeping
             try 

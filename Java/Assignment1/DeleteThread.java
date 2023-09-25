@@ -25,6 +25,7 @@ public class DeleteThread implements Runnable
             if (!deleteQueue.isEmpty()) 
             {
                 Info deleteRecord = deleteQueue.poll();
+                deleteLock.unlock();
                 boolean found = false;
                 // Simulate database deletion logic
                 databaseLock.lock();
@@ -40,7 +41,7 @@ public class DeleteThread implements Runnable
                 }
                 if(!found)
                 {
-                    System.out.println(Thread.currentThread().getName() + " DELETE failed " + deleteRecord.id + ", " + deleteRecord.name + " attempts:" + deleteRecord.attempt);
+                    System.out.println(Thread.currentThread().getName() + " DELETE failed " + deleteRecord.id + ", " + deleteRecord.name + ", attempts:" + deleteRecord.attempt);
                     if(deleteRecord.attempt < 3)
                     {
                         deleteRecord.attempt++;
@@ -52,7 +53,6 @@ public class DeleteThread implements Runnable
                 System.out.println(Thread.currentThread().getName() + " DELETE is sleeping");
                 databaseLock.unlock();
             }
-            deleteLock.unlock();
             
             // Simulate sleeping
             try 

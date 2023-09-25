@@ -25,6 +25,7 @@ public class CreateThread implements Runnable
             if (!createQueue.isEmpty()) 
             {
                 Info newRecord = createQueue.poll();
+                createLock.unlock();
                 // Simulate database creation logic
                 databaseLock.lock();
                 System.out.println(Thread.currentThread().getName() + " CREATE is waiting for request");
@@ -33,7 +34,6 @@ public class CreateThread implements Runnable
                 System.out.println(Thread.currentThread().getName() + " CREATE is sleeping");
                 databaseLock.unlock();             
             }
-            createLock.unlock();
             
             // Simulate sleeping
             try 
