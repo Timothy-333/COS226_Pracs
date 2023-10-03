@@ -53,12 +53,12 @@ public class Timeout implements Lock
                 myPred = prePred;
             }
         }
+        System.out.println(Thread.currentThread().getName() + ":Request " + request + " timed out");
         if(!tail.compareAndSet(node, myPred))
         {
             node.prev = myPred;
-            return false;
         }
-        return true;
+        return false;
     }
     public void unlock()
     {
