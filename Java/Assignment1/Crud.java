@@ -10,7 +10,7 @@ public class Crud {
     private volatile Queue<Info> update = new LinkedList<>();
     private volatile Queue<Info> delete = new LinkedList<>();
 
-    private int numThreads = 5;
+    private int numThreads = 2;
     private Thread[] threads = new Thread[numThreads * 4];
     
     private volatile Lock createLock = new Bakery(numThreads * 4);
