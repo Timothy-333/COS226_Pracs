@@ -1,4 +1,3 @@
-package Assignment2;
 import java.util.ArrayList;
 import java.util.Random;
 public class Main
@@ -38,10 +37,14 @@ public class Main
         for (int i = 0; i < 10; i++) 
         {
             int randomClientIndex = random.nextInt(clients.size());
-            Client recipient = clients.get(randomClientIndex);
-            String message = messages[random.nextInt(messages.length)];
-            clients.get(i).send(recipient, message);
-            clients.get(i).receive();
+            int randomSenderIndex = random.nextInt(clients.size());
+            while (randomSenderIndex == randomClientIndex)
+            {
+                randomSenderIndex = random.nextInt(clients.size());
+            }
+            int randomMessageIndex = random.nextInt(messages.length);
+            Message message = new Message(clients.get(randomClientIndex), messages[randomMessageIndex]);
+            clients.get(randomClientIndex).send(clients.get(randomSenderIndex), message);
         }
     }
 }

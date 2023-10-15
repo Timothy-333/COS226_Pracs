@@ -1,5 +1,3 @@
-package Assignment2;
-
 public class Reader extends Thread
 {
     private Server server;
@@ -10,10 +8,11 @@ public class Reader extends Thread
         this.server = server;
         this.client = client;
     }
-
+    public void read()
+    {
+        server.retrieveMessage(client);
+    }
     public void run()
     {
-        String message = server.retrieveMessage(client.name);
-        System.out.println(message);
     }
 }

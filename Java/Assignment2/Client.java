@@ -1,5 +1,3 @@
-package Assignment2;
-
 import java.util.concurrent.locks.Lock;
 
 public class Client 
@@ -14,18 +12,20 @@ public class Client
         this.name = name;
         reader = new Reader(server, this);
         writer = new Writer(server, this);
+        reader.start();
+        writer.start();
     }
-    void send(Client client, String message)
+    void send(Client reciever, Message message)
     {
         lock.lock();
-        writer.setMessage(message);
-        writer.start();
+        writer.setMessage(message, reciever);
+        writer.send();
         lock.unlock();
     }
     void receive()
     {
         lock.lock();
-        reader.start();
+        reader.read();
         lock.unlock();
     }
 }
